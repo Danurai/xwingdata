@@ -23,13 +23,6 @@
    :figwheel {:css-dirs ["resources/public/css"]} ;; watch and update CSS    
    
 	:profiles {:uberjar {:aot :all}}
-             :dev    {:plugins [[lein-cljsbuild "1.1.7"]
-                              [lein-figwheel "0.5.14"]
-                              [lein-autoexpect "1.9.0"]]
-                      :dependencies [[reloaded.repl "0.2.4"]
-                                   [expectations "2.2.0-rc3"]]
-                      :source-paths ["dev"]
-                      :env         {:port 9009}}}
                    
    :cljsbuild {:builds [{:id "dev"
                        :source-paths ["src" "dev"]
