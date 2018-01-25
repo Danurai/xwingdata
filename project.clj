@@ -22,15 +22,7 @@
                 
    :figwheel {:css-dirs ["resources/public/css"]} ;; watch and update CSS    
    
-	:profiles {:uberjar {:aot :all
-			     :env {:production true}
-			     :cljsbuild {:builds {
-					:server {:id server-side
-						 :source-paths ["src"]
-                       				 :compiler {:output-to "resources/public/xwingapp.js"
-                                 			    :main "xwingdata.client"
-                                 			    :optimizations :advanced
-                                 			    :pretty-print false}}}}}
+	:profiles {:uberjar {:aot :all}}
              :dev    {:plugins [[lein-cljsbuild "1.1.7"]
                               [lein-figwheel "0.5.14"]
                               [lein-autoexpect "1.9.0"]]
