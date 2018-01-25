@@ -1,0 +1,22 @@
+.img-small  {
+   width: 200px;
+}
+
+.sticky  {
+	position: sticky !important;
+	position: -webkit-sticky;
+	top:	10px;
+	z-index: 99;
+}
+
+.list-group-item:hover {
+   background-color: lightblue;
+   }
+   
+.breadcrumb {
+   cursor: pointer;
+}
+
+.breadcrumb li:hover {
+   font-style: bold;
+}
