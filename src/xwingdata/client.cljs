@@ -54,7 +54,7 @@
       (render-content)])
 
 (go
-  (let [{:keys [ws-channel error]} (<! (ws-ch "ws:/xwingdata.herokuapp.com/:80/ws"))]  ;; Set up websocket
+  (let [{:keys [ws-channel error]} (<! (ws-ch "ws://xwingdata.herokuapp.com:80/ws"))]  ;; Set up websocket
     (if-not error
       (do 
          (r/render [Page ws-channel] (.getElementById js/document "app"))
