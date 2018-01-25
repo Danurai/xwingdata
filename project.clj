@@ -6,7 +6,7 @@
 				:url "http://www.gnu.org/licenses/gpl.html"}
             
 	:main xwingdata.system
-   
+   :min-lein-version	"2.7.0"
    :jar-name "xwingdata.jar"
    :uberjar-name "xwingdata-standalone.jar"
    
