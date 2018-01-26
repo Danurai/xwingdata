@@ -14,7 +14,8 @@
    (first (filter #(= (:id %) id) (:upgrades @app-data) )))
 
 (defn show-data [id]
-   #(swap! app-data assoc :image (str "/images/"  (:image (get-upgrade-data id)))))
+      #(swap! app-data assoc :image (str "/images/"  (:image (get-upgrade-data id)))))
+      ;;#(swap! app-data assoc :sourcesets (:sourcesets (get-upgrade-data id)))))
    
 ;; Render Page
 (defn render-breadcrumbs [ws-ch]
@@ -33,7 +34,7 @@
                     :on-mouse-over (show-data (:id ug))
                     :on-click (show-data (:id ug))} 
                     (str (if (= (:unique ug) true) "\u2022 ") (:name ug) " (" (:points ug) ")")
-                    [:span {:class "badge"} 0]])]])               
+                    [:span {:class "badge"} (:count ug)]])]])               
                        
 (defn render-detail []
    [:div {:class "col-sm-6 sticky"}
@@ -41,7 +42,9 @@
             :class "img-small"
             :visibility (if-not (:image @app-data)
                         "hidden"
-                        "visible")}]])                       
+                        "visible")}]
+      [:div (for [src (:sourcesets @app-data)]
+         ^{:key src} [:p src])]])                       
                        
 (defn render-content []
    [:div {:class "row"}
@@ -54,7 +57,7 @@
       (render-content)])
 
 (go
-  (let [{:keys [ws-channel error]} (<! (ws-ch "ws://xwingdata.herokuapp.com:80/ws"))]  ;; Set up websocket
+  (let [{:keys [ws-channel error]} (<! (ws-ch "ws://localhost:9009/ws"))]  ;; Set up websocket
     (if-not error
       (do 
          (r/render [Page ws-channel] (.getElementById js/document "app"))

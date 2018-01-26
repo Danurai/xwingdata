@@ -6,18 +6,43 @@
 (def sources (json/read-str (slurp (io/resource "data/sources.js")) :key-fn keyword))
 
 (defn prep [xwd]
-   xwd
-)
+   xwd)
+
 
 (defn- slot-upgrades [slotname]
-   (sort-by :points (sort-by :name (filter #(= (:slot %) slotname) upgrades))))
+   (->> upgrades
+       (filter #(= (:slot %) slotname))
+       (sort-by :name)
+       (sort-by :points)))
 
+(defn get-source-counts [upgradeid]
+   (->> sources 
+       (map #(get-in % [:contents :upgrades (keyword (str upgradeid))]))
+       (filter identity)
+       (reduce +)))
+       
+(defn- add-source-counts [upgrades]
+   (map #(assoc % :count (get-source-counts (:id %))) upgrades))
+
+(defn get-upgrade-sets [upgradeid]
+   (->> sources 
+       (filter #(get-in % [:contents :upgrades (keyword (str upgradeid))])) 
+       (mapv :name)))   
+       
+(defn- add-source-sets [upgrades]
+   (map #(assoc % :sourcesets (get-upgrade-sets (:id %))) upgrades))
+
+(defn custom-upgrade-list [slotname]
+   (->> (slot-upgrades slotname)
+        add-source-counts
+        add-source-sets))
+       
 (defn update-upgrades [xwd slotname]
-   (assoc xwd :upgrades (slot-upgrades slotname)))
+   (assoc xwd :upgrades (custom-upgrade-list slotname)))
   
 (defn xwd []
    {:slots (sort (distinct (map #(:slot %) upgrades)))
-     :upgrades (slot-upgrades "Astromech")})
+    :upgrades (custom-upgrade-list "Astromech")})
     
 ;;["Astromech" "Bomb" "Cannon" "Cargo" "Crew" "Elite" "Hardpoint" "Illicit" "Missile" "Modification" "Salvaged Astromech" "System" "Team" "Tech" "Title" "Torpedo" "Turret"]   
 ;;[{:name "BB-8" :image "upgrades/Astromech/bb-8.png" :id 1 :slot "Astromech"}
