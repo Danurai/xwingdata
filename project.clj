@@ -48,5 +48,6 @@
                        :source-paths ["src"]
                        :compiler {:output-to "resources/public/xwingapp.js"
                                  :main "xwingdata.client"
+                                 :closure-defines {xwingdata.client/ws-uri "wss://xwingdata.herokuapp.com/ws"}
                                  :optimizations :advanced
                                  :pretty-print false}}]})
