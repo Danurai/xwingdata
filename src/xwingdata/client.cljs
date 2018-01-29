@@ -4,6 +4,7 @@
             [cljs.core.async :refer [<! >! put! close!]])
    (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
    
+(goog-define ws-uri "ws://localhost:9009/ws")   ;;https://www.martinklepsch.org/posts/parameterizing-clojurescript-builds.html
 (enable-console-print!)
 
 ;; Sample data for testing   
@@ -14,8 +15,9 @@
    (first (filter #(= (:id %) id) (:upgrades @app-data) )))
 
 (defn show-data [id]
-      #(swap! app-data assoc :image (str "/images/"  (:image (get-upgrade-data id)))))
-      ;;#(swap! app-data assoc :sourcesets (:sourcesets (get-upgrade-data id)))))
+   #(swap! app-data assoc 
+      :image (str "/images/" (:image (get-upgrade-data id))) 
+      :sourcesets (:sourcesets (get-upgrade-data id))))
    
 ;; Render Page
 (defn render-breadcrumbs [ws-ch]
@@ -37,14 +39,13 @@
                     [:span {:class "badge"} (:count ug)]])]])               
                        
 (defn render-detail []
-   [:div {:class "col-sm-6 sticky"}
+   [:div {:class "col-sm-6 sticky"
+         :visibility (if-not (:image @app-data) "hidden" "visible")}
       [:img {:src (str (:image @app-data))
-            :class "img-small"
-            :visibility (if-not (:image @app-data)
-                        "hidden"
-                        "visible")}]
-      [:div (for [src (:sourcesets @app-data)]
-         ^{:key src} [:p src])]])                       
+            :class "img-small"}]
+      [:h3 "Source sets"]
+      (for [src (:sourcesets @app-data)]
+         ^{:key src} [:p src])])                       
                        
 (defn render-content []
    [:div {:class "row"}
@@ -57,15 +58,16 @@
       (render-content)])
 
 (go
-  (let [{:keys [ws-channel error]} (<! (ws-ch "ws://localhost:9009/ws"))]  ;; Set up websocket
+  (let [{:keys [ws-channel error]} (<! (ws-ch ws-uri))]  ;; Set up websocket  (get (System/getenv) "WS-CHAN" "ws://localhost:9009/ws")
     (if-not error
       (do 
          (r/render [Page ws-channel] (.getElementById js/document "app"))
          ;;(>! ws-channel "Astromech")
          (loop []
-            (when-let [{:keys [message]} (<! ws-channel)]
-               (swap! app-data assoc :slots (:slots message))
-               (swap! app-data assoc :upgrades (:upgrades message))
+            (when-let [{:keys [message]} (<! ws-channel)]   ;;Error handling for server going away
+               (reset! app-data message)
+               ;;(swap! app-data assoc :slots (:slots message))
+               ;;(swap! app-data assoc :upgrades (:upgrades message))
                (recur)))) 
       (js/console.log "Error:" (pr-str error)))))
       
