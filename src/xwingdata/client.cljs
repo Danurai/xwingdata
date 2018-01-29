@@ -2,7 +2,8 @@
    (:require [reagent.core :as r]
             [chord.client :refer [ws-ch]]
             [cljs.core.async :refer [<! >! put! close!]])
-   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
+   (:require-macros [cljs.core.async.macros :refer [go go-loop]])
+   (:refer-clojure :exclude [uuid? uri]))
    
 (goog-define ws-uri "ws://localhost:9009/ws")   ;;https://www.martinklepsch.org/posts/parameterizing-clojurescript-builds.html
 (enable-console-print!)
@@ -39,8 +40,8 @@
                     [:span {:class "badge"} (:count ug)]])]])               
                        
 (defn render-detail []
-   [:div {:class "col-sm-6 sticky"
-         :visibility (if-not (:image @app-data) "hidden" "visible")}
+   [:div {:class (str "col-sm-6 sticky"
+                    (if-not (:image @app-data) " hide"))}
       [:img {:src (str (:image @app-data))
             :class "img-small"}]
       [:h3 "Source sets"]
