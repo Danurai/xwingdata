@@ -5,10 +5,6 @@
 (def upgrades (json/read-str (slurp (io/resource "data/upgrades.js")) :key-fn keyword))
 (def sources (json/read-str (slurp (io/resource "data/sources.js")) :key-fn keyword))
 
-(defn prep [xwd]
-   xwd)
-
-
 (defn- slot-upgrades [slotname]
    (->> upgrades
        (filter #(= (:slot %) slotname))
