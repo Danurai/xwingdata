@@ -19,15 +19,16 @@
   
 (enable-console-print!)
 
-(def app-data (r/atom {:slots ["astromech"] :upgrades [] :image nil :sourcesets nil}))
+(def app-data (r/atom nil))
 
 (defn get-upgrades [ev crd] 
   (chsk-send! 
     [:core/breadcrumb crd]
     5000
     (fn [cb-reply]
-      (prn cb-reply)
-      (swap! app-data assoc :upgrades cb-reply))))
+      (swap! app-data assoc :upgrades cb-reply)
+      (swap! app-data dissoc :image :sourcesets)
+      )))
 
 (defn get-upgrade-data [id] 
   (->> @app-data 

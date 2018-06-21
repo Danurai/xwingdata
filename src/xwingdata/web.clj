@@ -74,7 +74,7 @@
     (?reply-fn (data/xwd))))
   
 (defmethod event :core/breadcrumb [{:as ev-msg :keys [event ?reply-fn]}]
-  (prn (last event))
+  (prn event)
   (when ?reply-fn
     (?reply-fn (-> event last data/custom-upgrade-list))))
   
