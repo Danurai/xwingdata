@@ -1,3 +1,27 @@
+.loader {
+  width:  90px;
+  height: 90px;
+  border: 10px solid lightgrey;
+  border-top-color: grey;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  margin: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@font-face {
+    font-family: "Kimberley";
+    src: url('fonts/kimberley bl.ttf');
+}
+
+body  {
+  font-family: Orbitron, sans-serif;
+}
+
 .img-small  {
    width: 200px;
 }
