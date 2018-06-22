@@ -9,7 +9,7 @@
 ; sente
 (let [{:keys [chsk ch-recv send-fn state]}
       (sente/make-channel-socket! "/chsk" ; Note the same path as before
-       {:type :auto :ws-kalive-ms 25000 ; e/o #{:auto :ajax :ws}
+       {:type :auto :ws-kalive-ms 20000 ; e/o #{:auto :ajax :ws}
        })]
   (def chsk       chsk)
   (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
